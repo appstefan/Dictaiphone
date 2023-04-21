@@ -1,5 +1,5 @@
 //
-//  TranscriptView.swift
+//  FullTranscriptView.swift
 //  Dictaiphone
 //
 //  Created by Stefan Britton on 2023-04-20.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TranscriptView: View {
+struct FullTranscriptView: View {
     let note: Note
     
     var body: some View {
@@ -19,8 +19,8 @@ struct TranscriptView: View {
     }
 }
 
-struct TranscriptView_Previews: PreviewProvider {
+struct FullTranscriptView_Previews: PreviewProvider {
     static var previews: some View {
-        TranscriptView(note: DataStore.mockNote(DataStore.mock.context))
+        FullTranscriptView(note: .mock(hoursAgo: 0))
     }
 }

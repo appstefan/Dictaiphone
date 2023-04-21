@@ -16,7 +16,7 @@ struct DictaiphoneApp: App {
         WindowGroup {
             NotesListView()
                 .environmentObject(speechSummarizer)
-                .environment(\.managedObjectContext, DataStore.main.context)
+                .environment(\.managedObjectContext, DataStore.main.viewContext)
         }
     }
 }

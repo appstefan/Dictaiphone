@@ -18,7 +18,7 @@
 		F8A59A7729F20D0700599D73 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A7129F20D0700599D73 /* DataStore.swift */; };
 		F8A59A7829F20D0700599D73 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A7229F20D0700599D73 /* DataModel.xcdatamodeld */; };
 		F8A59A7A29F2170200599D73 /* NoteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A7929F2170200599D73 /* NoteDetailView.swift */; };
-		F8A59A7C29F21E8E00599D73 /* TranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A7B29F21E8E00599D73 /* TranscriptView.swift */; };
+		F8A59A7C29F21E8E00599D73 /* FullTranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A7B29F21E8E00599D73 /* FullTranscriptView.swift */; };
 		F8A59A7F29F228E800599D73 /* Secret.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A7E29F228E800599D73 /* Secret.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,7 +35,7 @@
 		F8A59A7129F20D0700599D73 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		F8A59A7329F20D0700599D73 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		F8A59A7929F2170200599D73 /* NoteDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailView.swift; sourceTree = "<group>"; };
-		F8A59A7B29F21E8E00599D73 /* TranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptView.swift; sourceTree = "<group>"; };
+		F8A59A7B29F21E8E00599D73 /* FullTranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullTranscriptView.swift; sourceTree = "<group>"; };
 		F8A59A7D29F2289000599D73 /* Secret.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secret.xcconfig; sourceTree = "<group>"; };
 		F8A59A7E29F228E800599D73 /* Secret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secret.swift; sourceTree = "<group>"; };
 		F8A59A8029F2295900599D73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -75,11 +75,7 @@
 				F8A59A8029F2295900599D73 /* Info.plist */,
 				F8A59A5A29F20C1300599D73 /* DictaiphoneApp.swift */,
 				F8A59A6929F20C8D00599D73 /* SpeechSummarizer.swift */,
-				F8A59A7029F20D0700599D73 /* NoteView.swift */,
-				F8A59A7B29F21E8E00599D73 /* TranscriptView.swift */,
-				F8A59A7929F2170200599D73 /* NoteDetailView.swift */,
-				F8A59A6F29F20D0700599D73 /* CreateNoteView.swift */,
-				F8A59A6E29F20D0700599D73 /* NotesListView.swift */,
+				F8EA6F3429F2CA0900CAAE7D /* Views */,
 				F8A59A7129F20D0700599D73 /* DataStore.swift */,
 				F8A59A7E29F228E800599D73 /* Secret.swift */,
 				F8A59A7D29F2289000599D73 /* Secret.xcconfig */,
@@ -97,6 +93,18 @@
 				F8A59A6229F20C1400599D73 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F8EA6F3429F2CA0900CAAE7D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F8A59A6E29F20D0700599D73 /* NotesListView.swift */,
+				F8A59A7029F20D0700599D73 /* NoteView.swift */,
+				F8A59A7929F2170200599D73 /* NoteDetailView.swift */,
+				F8A59A7B29F21E8E00599D73 /* FullTranscriptView.swift */,
+				F8A59A6F29F20D0700599D73 /* CreateNoteView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,7 +185,7 @@
 			files = (
 				F8A59A7729F20D0700599D73 /* DataStore.swift in Sources */,
 				F8A59A7F29F228E800599D73 /* Secret.swift in Sources */,
-				F8A59A7C29F21E8E00599D73 /* TranscriptView.swift in Sources */,
+				F8A59A7C29F21E8E00599D73 /* FullTranscriptView.swift in Sources */,
 				F8A59A7829F20D0700599D73 /* DataModel.xcdatamodeld in Sources */,
 				F8A59A6A29F20C8D00599D73 /* SpeechSummarizer.swift in Sources */,
 				F8A59A7A29F2170200599D73 /* NoteDetailView.swift in Sources */,
@@ -308,7 +316,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Dictaiphone/Dictaiphone.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Dictaiphone/Preview Content\"";
 				DEVELOPMENT_TEAM = 9AP3GRDUFP;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -327,7 +335,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -350,7 +358,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Dictaiphone/Dictaiphone.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Dictaiphone/Preview Content\"";
 				DEVELOPMENT_TEAM = 9AP3GRDUFP;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -369,7 +377,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;

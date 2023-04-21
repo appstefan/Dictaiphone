@@ -43,7 +43,7 @@ class SpeechSummarizer: ObservableObject {
     }
     
     @MainActor
-    func auth() {
+    func authorize() {
         Task {
             switch await requestAuthorization() {
             case .authorized:
@@ -112,7 +112,7 @@ class SpeechSummarizer: ObservableObject {
             let completion = try await client.chats.create(
                 model: Model.GPT3.gpt3_5Turbo,
                 messages: [Chat.Message.user(content: prompt)],
-                maxTokens: 60
+                maxTokens: 200
             )
         return completion
             .choices
@@ -158,7 +158,7 @@ class SpeechSummarizer: ObservableObject {
         let completion = try await client.chats.create(
             model: Model.GPT3.gpt3_5Turbo,
             messages: [Chat.Message.user(content: prompt)],
-            maxTokens: 60
+            maxTokens: 30
         )
         return completion
             .choices

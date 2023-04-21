@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NotesListView: View {
     @Environment(\.managedObjectContext)
-    private var context
+    private var viewContext
     
     @FetchRequest(
         sortDescriptors: [
@@ -44,7 +44,9 @@ struct NotesListView: View {
                 }
                 .navigationTitle("Dictaiphone")
                 .sheet(isPresented: $isSheetPresented) {
-                    CreateNoteView()
+                    NavigationStack {
+                        CreateNoteView()
+                    }
                 }
             },
             detail: {
@@ -66,9 +68,9 @@ struct NotesListView: View {
     
     private func delete(_ note: Note) {
         withAnimation {
-            context.delete(note)
+            viewContext.delete(note)
             do {
-                try context.save()
+                try viewContext.save()
             } catch let nsError as NSError {
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
@@ -78,9 +80,7 @@ struct NotesListView: View {
 
 struct NotesListView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            NotesListView()
-                .environment(\.managedObjectContext, DataStore.mock.context)
-        }
+        NotesListView()
+            .environment(\.managedObjectContext, DataStore.mock(count: 1).viewContext)
     }
 }

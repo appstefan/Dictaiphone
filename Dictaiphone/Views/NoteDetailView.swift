@@ -15,7 +15,7 @@ struct NoteDetailView: View {
             Section("Transcript") {
                 NavigationLink(
                     destination: {
-                        TranscriptView(note: note)
+                        FullTranscriptView(note: note)
                     },
                     label: {
                         Text(note.text ?? "")
@@ -34,7 +34,7 @@ struct NoteDetailView: View {
 struct NoteDetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            NoteDetailView(note: DataStore.mockNote(DataStore.mock.context))
+            NoteDetailView(note: .mock(hoursAgo: 1))
         }
     }
 }
