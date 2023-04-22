@@ -12,7 +12,7 @@ struct NoteView: View {
     
     var body: some View {
         VStack(alignment: .listRowSeparatorLeading, spacing: 8) {
-            VStack(alignment: .listRowSeparatorLeading, spacing: 2) {
+            VStack(alignment: .listRowSeparatorLeading, spacing: 4) {
                 Text(note.title ?? "")
                     .font(.headline)
                     .fixedSize(horizontal: false, vertical: true)

@@ -89,6 +89,14 @@
         "revision" : "59b966415dd336db6f388bbfe3fb43cfa549b981",
         "version" : "1.16.0"
       }
+    },
+    {
+      "identity" : "swiftwhisper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/exPHAT/SwiftWhisper",
+      "state" : {
+        "revision" : "6ed3484c5cf449041b5c9bcb3ac82455d6a586d7"
+      }
     }
   ],
   "version" : 2

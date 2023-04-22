@@ -10,12 +10,12 @@ import SwiftUI
 @main
 struct DictaiphoneApp: App {
     @StateObject
-    var speechSummarizer: SpeechSummarizer = SpeechSummarizer()
+    var summarizer: Summarizer = Summarizer()
     
     var body: some Scene {
         WindowGroup {
             NotesListView()
-                .environmentObject(speechSummarizer)
+                .environmentObject(summarizer)
                 .environment(\.managedObjectContext, DataStore.main.viewContext)
         }
     }

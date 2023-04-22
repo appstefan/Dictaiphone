@@ -9,17 +9,17 @@ import SwiftUI
 
 struct NotesListView: View {
     @Environment(\.managedObjectContext)
-    private var viewContext
+    var viewContext
     
     @FetchRequest(
         sortDescriptors: [
             NSSortDescriptor(keyPath: \Note.dateCreated, ascending: false)
         ],
         animation: .default)
-    private var notes: FetchedResults<Note>
+    var notes: FetchedResults<Note>
     
     @State
-    var isSheetPresented: Bool = false
+    var showCreateNote: Bool = false
     
     @State
     var selectedNote: Note.ID?
@@ -37,13 +37,13 @@ struct NotesListView: View {
                 }
                 .toolbar {
                     ToolbarItem {
-                        Button(action: add) {
-                            Label("Add Note", systemImage: "plus")
+                        Button(action: { showCreateNote = true }) {
+                            Label("Add", systemImage: "plus")
                         }
                     }
                 }
-                .navigationTitle("Dictaiphone")
-                .sheet(isPresented: $isSheetPresented) {
+                .navigationTitle("Dictaitions")
+                .sheet(isPresented: $showCreateNote) {
                     NavigationStack {
                         CreateNoteView()
                     }
@@ -60,10 +60,6 @@ struct NotesListView: View {
             }
         )
         
-    }
-    
-    private func add() {
-        isSheetPresented = true
     }
     
     private func delete(_ note: Note) {

@@ -15,7 +15,7 @@ struct CreateNoteView: View {
     private var viewContext
 
     @EnvironmentObject
-    private var speechSummarizer: SpeechSummarizer
+    private var summarizer: Summarizer
     
     @State
     private var title: String?
@@ -35,21 +35,22 @@ struct CreateNoteView: View {
     var body: some View {
         List {
             Section("") {
-                if speechSummarizer.isRecording {
+                if summarizer.isRecording {
                     Button("Stop") {
-                        speechSummarizer.stop()
+                        summarizer.stopRecording()
                     }
-                } else if speechSummarizer.text.isEmpty {
+                } else if !summarizer.hasRecording {
                     Button("Start") {
-                        do {
-                            try speechSummarizer.start()
-                        } catch {
-                            print(error)
-                        }
+                        summarizer.startRecording()
+                    }
+                } else if summarizer.isTranscribing {
+                    VStack(alignment: .leading) {
+                        Text("Transcribing...")
+                        ProgressView(value: summarizer.transcribeProgress)
                     }
                 } else if isSummarizing {
-                    Text("Loading...")
-                } else if let summary {
+                    Text("Summarizing...")
+                } else if summary != nil {
                     Button("Clear") {
                         clear()
                     }
@@ -78,16 +79,11 @@ struct CreateNoteView: View {
                 }
             }
             Section("Transcript") {
-                Text(speechSummarizer.text)
+                Text(summarizer.text)
             }
         }
         .navigationTitle("New recording")
-        .onAppear {
-            if !speechSummarizer.isAuthorized {
-                speechSummarizer.authorize()
-            }
-        }
-        .interactiveDismissDisabled(hasSummary || isSummarizing || speechSummarizer.isRecording)
+        .interactiveDismissDisabled(hasSummary || isSummarizing || summarizer.isRecording)
         .toolbar {
             if hasSummary {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -119,20 +115,20 @@ struct CreateNoteView: View {
         self.title = nil
         self.subtitle = nil
         self.summary = nil
-        self.speechSummarizer.text = ""
+        self.summarizer.clear()
     }
     
     @MainActor
     private func summarize() {
-        guard !speechSummarizer.text.isEmpty else {
+        guard !summarizer.text.isEmpty else {
             return
         }
         self.isSummarizing = true
         Task {
-            self.summary = try await speechSummarizer.createSummary()
+            self.summary = try await summarizer.makeSummary()
             if let summary {
-                self.title = try await speechSummarizer.createTitle(summary)
-                self.subtitle = try await speechSummarizer.createSubtitle(summary)
+                self.title = try await summarizer.makeTitle(summary)
+                self.subtitle = try await summarizer.makeSubtitle(summary)
             }
             self.isSummarizing = false
         }
@@ -142,13 +138,13 @@ struct CreateNoteView: View {
         withAnimation {
             let system = Note(context: viewContext)
             system.dateCreated = .now
-            system.text = speechSummarizer.text
+            system.text = summarizer.text
             system.title = title
             system.summary = summary
             system.subtitle = subtitle
             do {
                 try viewContext.save()
-                speechSummarizer.text = ""
+                summarizer.clear()
                 dismiss()
             } catch let nsError as NSError {
                 fatalError("\(nsError), \(nsError.userInfo)")
@@ -158,27 +154,12 @@ struct CreateNoteView: View {
 }
 
 struct CreateNoteView_Previews: PreviewProvider {
-    static var speechSummarizer = SpeechSummarizer()
+    static var summarizer = Summarizer()
     
     static var previews: some View {
         NavigationStack {
             CreateNoteView()
-                .environmentObject(speechSummarizer)
+                .environmentObject(summarizer)
         }
     }
 }
-
-
-
-//                .alert(
-//                    "Discard this note?",
-//                    isPresented: $showSaveAlert
-//                ) {
-//                    Button(role: .destructive) {
-//                        dismiss()
-//                    } label: {
-//                        Text("Discard")
-//                    }
-//                } message: {
-//                    Text("This transcipt and the summary will not be saved.")
-//                }
