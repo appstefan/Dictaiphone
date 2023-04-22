@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1FE1C33429F3C7B90078EE2A /* Launchscreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FE1C33329F3C7B90078EE2A /* Launchscreen.storyboard */; };
 		F8A59A5B29F20C1300599D73 /* DictaiphoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A5A29F20C1300599D73 /* DictaiphoneApp.swift */; };
 		F8A59A5F29F20C1400599D73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8A59A5E29F20C1400599D73 /* Assets.xcassets */; };
 		F8A59A6329F20C1400599D73 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8A59A6229F20C1400599D73 /* Preview Assets.xcassets */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1FE1C33329F3C7B90078EE2A /* Launchscreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Launchscreen.storyboard; sourceTree = "<group>"; };
 		F8A59A5729F20C1300599D73 /* Dictaiphone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dictaiphone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8A59A5A29F20C1300599D73 /* DictaiphoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictaiphoneApp.swift; sourceTree = "<group>"; };
 		F8A59A5E29F20C1400599D73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				F8A59A5E29F20C1400599D73 /* Assets.xcassets */,
 				F8A59A6029F20C1400599D73 /* Dictaiphone.entitlements */,
 				F8A59A6129F20C1400599D73 /* Preview Content */,
+				1FE1C33329F3C7B90078EE2A /* Launchscreen.storyboard */,
 			);
 			path = Dictaiphone;
 			sourceTree = "<group>";
@@ -179,6 +182,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8A59A6329F20C1400599D73 /* Preview Assets.xcassets in Resources */,
+				1FE1C33429F3C7B90078EE2A /* Launchscreen.storyboard in Resources */,
 				F8A59A5F29F20C1400599D73 /* Assets.xcassets in Resources */,
 				F8EA6F3F29F39AE700CAAE7D /* ggml-small.bin in Resources */,
 			);
@@ -209,6 +213,7 @@
 /* Begin XCBuildConfiguration section */
 		F8A59A6429F20C1400599D73 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F8EA6F3D29F3990D00CAAE7D /* Secret.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -267,6 +272,7 @@
 		};
 		F8A59A6529F20C1400599D73 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F8EA6F3D29F3990D00CAAE7D /* Secret.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -325,7 +331,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"Dictaiphone/Preview Content\"";
-				DEVELOPMENT_TEAM = 9AP3GRDUFP;
+				DEVELOPMENT_TEAM = W9R656M3L3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -347,7 +353,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.makeshift.Dictaiphone;
+				PRODUCT_BUNDLE_IDENTIFIER = com.makeshift.DictaiphoneTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -366,7 +372,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"Dictaiphone/Preview Content\"";
-				DEVELOPMENT_TEAM = 9AP3GRDUFP;
+				DEVELOPMENT_TEAM = W9R656M3L3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -388,7 +394,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.makeshift.Dictaiphone;
+				PRODUCT_BUNDLE_IDENTIFIER = com.makeshift.DictaiphoneTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";

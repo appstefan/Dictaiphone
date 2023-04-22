@@ -7,9 +7,30 @@
 
 import SwiftUI
 
+
+
 struct NoteDetailView: View {
     let note: Note
     
+    @State private var showShareSheet = false
+
+    
+    private var itemsToShare: [Any] {
+           let actionItemsString = note.actionItems ?? ""
+           let actionItemsArray = actionItemsString
+               .components(separatedBy: "-")
+               .map { $0.trimmingCharacters(in: .whitespaces) }
+               .filter { !$0.isEmpty }
+           let formattedActionItems = actionItemsArray.joined(separator: "\n")
+           
+           return [
+                "Title: \(note.title ?? "")",
+                "Summary: \(note.summary ?? "")",
+               "Action Items:\n\(formattedActionItems)"
+           ]
+       }
+  
+ 
     var body: some View {
         List {
             Section("Transcript") {
@@ -26,8 +47,20 @@ struct NoteDetailView: View {
             Section("Summary") {
                 Text(note.summary ?? "")
             }
+            Section("Action Items") {
+                Text(note.actionItems ?? "")
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(trailing: Button(action: {
+            showShareSheet = true
+        }, label: {
+            Image(systemName: "square.and.arrow.up")
+        }))
+        .sheet(isPresented: $showShareSheet) {
+            // Present a UIActivityViewController to share the items
+            ActivityView(activityItems: itemsToShare, applicationActivities: nil)
+        }
     }
 }
 
@@ -36,5 +69,19 @@ struct NoteDetailView_Previews: PreviewProvider {
         NavigationStack {
             NoteDetailView(note: .mock(hoursAgo: 1))
         }
+    }
+}
+
+// The ActivityView is a wrapper around UIActivityViewController
+struct ActivityView: UIViewControllerRepresentable {
+    let activityItems: [Any]
+    let applicationActivities: [UIActivity]?
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityView>) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityView>) {
     }
 }

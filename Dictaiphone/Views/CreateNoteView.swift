@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+//import EventKit
+
 
 struct CreateNoteView: View {
     @Environment(\.dismiss)
@@ -13,27 +15,28 @@ struct CreateNoteView: View {
     
     @Environment(\.managedObjectContext)
     private var viewContext
-
+    
     @EnvironmentObject
     private var summarizer: Summarizer
     
-    @State
-    private var title: String?
-    
-    @State
-    private var subtitle: String?
-    
-    @State
-    private var summary: String?
-    
-    @State
-    private var isSummarizing: Bool = false
+        
+//        @State
+//        private var showShareSheet: Bool = false
     
     @State
     private var showSaveAlert: Bool = false
     
+    
+    @State private var itemsToShare: [String] = []
+    
     var body: some View {
         List {
+//            Button("Share Action Items") {
+//                           showShareSheet = true
+//                       }
+//                       .sheet(isPresented: $showShareSheet) {
+//                           ShareSheet(activityItems: summarizer.actionItems)
+//                       }
             Section("") {
                 if summarizer.isRecording {
                     Button("Stop") {
@@ -48,42 +51,66 @@ struct CreateNoteView: View {
                         Text("Transcribing...")
                         ProgressView(value: summarizer.transcribeProgress)
                     }
-                } else if isSummarizing {
-                    Text("Summarizing...")
-                } else if summary != nil {
-                    Button("Clear") {
+                } else if summarizer.isSummarizing {
+                    VStack(alignment: .leading) {
+                        Text("Summarizing...")
+                        ProgressView() // Indeterminate progress view (spinning)
+                    }
+                } else if summarizer.summary == nil {
+                    Button("") {
                         clear()
                     }
                 } else {
                     Button("Clear") {
                         clear()
                     }
-                    Button("Summarize!") {
-                        summarize()
-                    }
                 }
             }
-            if let title {
+            if let title = summarizer.title {
                 Section("Title") {
                     Text(title)
                 }
             }
-            if let subtitle {
+            if let subtitle = summarizer.subtitle {
                 Section("Subtitle") {
                     Text(subtitle)
                 }
             }
-            if let summary {
+            if let summary = summarizer.summary {
                 Section("Summary") {
                     Text(summary)
+                }
+                Section("Action Items") {
+                    ForEach(summarizer.actionItems, id: \.self) { actionItem in
+                        Text(actionItem)
+                    }
                 }
             }
             Section("Transcript") {
                 Text(summarizer.text)
             }
         }
-        .navigationTitle("New recording")
-        .interactiveDismissDisabled(hasSummary || isSummarizing || summarizer.isRecording)
+//        .actionSheet(isPresented: $showShareSheet) {
+//            ActionSheet(
+//                title: Text("Share Action Items"),
+//                buttons: [
+//                    .default(Text("Share"), action: {
+//                        itemsToShare = summarizer.actionItems
+//                        showShareSheet = true
+//                    }),
+//                    .default(Text("Export to To-Do List"), action: {
+//                        exportToReminders()
+//                    }),
+//                    .cancel()
+//                ]
+//            )
+//        }
+//                .sheet(isPresented: $showShareSheet) {
+//                    ActivityView(activityItems: itemsToShare, applicationActivities: nil)
+//                }
+        
+        .navigationTitle(summarizer.title ?? "New Recording")
+        .interactiveDismissDisabled(hasSummary || summarizer.isRecording)
         .toolbar {
             if hasSummary {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -108,30 +135,11 @@ struct CreateNoteView: View {
     }
     
     private var hasSummary: Bool {
-        !(summary?.isEmpty ?? true)
+        !(summarizer.summary?.isEmpty ?? true)
     }
     
     private func clear() {
-        self.title = nil
-        self.subtitle = nil
-        self.summary = nil
-        self.summarizer.clear()
-    }
-    
-    @MainActor
-    private func summarize() {
-        guard !summarizer.text.isEmpty else {
-            return
-        }
-        self.isSummarizing = true
-        Task {
-            self.summary = try await summarizer.makeSummary()
-            if let summary {
-                self.title = try await summarizer.makeTitle(summary)
-                self.subtitle = try await summarizer.makeSubtitle(summary)
-            }
-            self.isSummarizing = false
-        }
+        summarizer.clear()
     }
     
     private func saveAndDismiss() {
@@ -139,9 +147,11 @@ struct CreateNoteView: View {
             let system = Note(context: viewContext)
             system.dateCreated = .now
             system.text = summarizer.text
-            system.title = title
-            system.summary = summary
-            system.subtitle = subtitle
+            system.title = summarizer.title
+            system.summary = summarizer.summary
+            system.subtitle = summarizer.subtitle
+            system.actionItems = summarizer.actionItems.joined(separator: ",")
+
             do {
                 try viewContext.save()
                 summarizer.clear()
@@ -151,15 +161,65 @@ struct CreateNoteView: View {
             }
         }
     }
-}
+//    private func exportToReminders() {
+//        let eventStore = EKEventStore()
+//        eventStore.requestAccess(to: .reminder) { (granted, error) in
+//            if granted {
+//                // Create a reminder for each action item
+//                for item in summarizer.actionItems {
+//                    let reminder = EKReminder(eventStore: eventStore)
+//                    reminder.title = item
+//                    reminder.calendar = eventStore.defaultCalendarForNewReminders()
+//
+//                    do {
+//                        // Save the reminder
+//                        try eventStore.save(reminder, commit: true)
+//                    } catch {
+//                        // Handle error when saving the reminder
+//                        print("Error saving reminder: \(error)")
+//                    }
+//                }
+//            } else {
+//                // Handle error when access is not granted
+//                print("Access to Reminders app not granted")
+//            }
+//        }
+//    }
+//
+//    struct ShareSheet: UIViewControllerRepresentable {
+//        typealias UIViewControllerType = UIActivityViewController
+//
+//        var activityItems: [String]
+//
+//        func makeUIViewController(context: Context) -> UIActivityViewController {
+//            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+//            return activityViewController
+//        }
+//
+//        func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+//            // No need to update anything
+//        }
+//    }
+    struct CreateNoteView_Previews: PreviewProvider {
+        static var summarizer = Summarizer()
+        
+        static var previews: some View {
+            NavigationStack {
+                CreateNoteView()
+                    .environmentObject(summarizer)
+            }
+        }
+    }
+    struct ActivityView: UIViewControllerRepresentable {
+        let activityItems: [Any]
+        let applicationActivities: [UIActivity]?
 
-struct CreateNoteView_Previews: PreviewProvider {
-    static var summarizer = Summarizer()
-    
-    static var previews: some View {
-        NavigationStack {
-            CreateNoteView()
-                .environmentObject(summarizer)
+        func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityView>) -> UIActivityViewController {
+            let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+            return controller
+        }
+
+        func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityView>) {
         }
     }
 }
