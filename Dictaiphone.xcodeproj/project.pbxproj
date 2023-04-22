@@ -21,6 +21,7 @@
 		F8A59A7C29F21E8E00599D73 /* FullTranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A7B29F21E8E00599D73 /* FullTranscriptView.swift */; };
 		F8A59A7F29F228E800599D73 /* Secret.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A59A7E29F228E800599D73 /* Secret.swift */; };
 		F8EA6F3A29F2E82500CAAE7D /* SwiftWhisper in Frameworks */ = {isa = PBXBuildFile; productRef = F8EA6F3929F2E82500CAAE7D /* SwiftWhisper */; };
+		F8EA6F3F29F39AE700CAAE7D /* ggml-small.bin in Resources */ = {isa = PBXBuildFile; fileRef = F8EA6F3E29F39AE700CAAE7D /* ggml-small.bin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,8 @@
 		F8A59A7B29F21E8E00599D73 /* FullTranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullTranscriptView.swift; sourceTree = "<group>"; };
 		F8A59A7E29F228E800599D73 /* Secret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secret.swift; sourceTree = "<group>"; };
 		F8A59A8029F2295900599D73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F8EA6F3D29F3990D00CAAE7D /* Secret.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secret.xcconfig; sourceTree = "<group>"; };
+		F8EA6F3E29F39AE700CAAE7D /* ggml-small.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "ggml-small.bin"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,9 +79,11 @@
 				F8A59A8029F2295900599D73 /* Info.plist */,
 				F8A59A5A29F20C1300599D73 /* DictaiphoneApp.swift */,
 				F8A59A6929F20C8D00599D73 /* Summarizer.swift */,
-				F8EA6F3429F2CA0900CAAE7D /* Views */,
 				F8A59A7129F20D0700599D73 /* DataStore.swift */,
 				F8A59A7E29F228E800599D73 /* Secret.swift */,
+				F8EA6F3429F2CA0900CAAE7D /* Views */,
+				F8EA6F3D29F3990D00CAAE7D /* Secret.xcconfig */,
+				F8EA6F3E29F39AE700CAAE7D /* ggml-small.bin */,
 				F8A59A7229F20D0700599D73 /* DataModel.xcdatamodeld */,
 				F8A59A5E29F20C1400599D73 /* Assets.xcassets */,
 				F8A59A6029F20C1400599D73 /* Dictaiphone.entitlements */,
@@ -175,6 +180,7 @@
 			files = (
 				F8A59A6329F20C1400599D73 /* Preview Assets.xcassets in Resources */,
 				F8A59A5F29F20C1400599D73 /* Assets.xcassets in Resources */,
+				F8EA6F3F29F39AE700CAAE7D /* ggml-small.bin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
