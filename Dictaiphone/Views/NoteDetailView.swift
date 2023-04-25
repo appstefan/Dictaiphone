@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 
 
 struct NoteDetailView: View {
     let note: Note
-    
+    @State private var audioPlayer: AVAudioPlayer?
+    @State private var isPlaying = false
     @State private var showShareSheet = false
 
     
@@ -48,9 +50,46 @@ struct NoteDetailView: View {
                 Text(note.summary ?? "")
             }
             Section("Action Items") {
-                Text(note.actionItems ?? "")
+                            // Split the action items string into an array
+                            let actionItemsArray = note.actionItems?.split(separator: "\n").map(String.init) ?? []
+                            
+                            // Display each action item on its own line
+                            ForEach(actionItemsArray, id: \.self) { actionItem in
+                                Text(actionItem)
+                            }
+                        }
+                    }
+        Button(action: {
+            if isPlaying {
+                audioPlayer?.pause()
+            } else {
+                if audioPlayer == nil {
+                    // Initialize the audio player with the audio file path from the note
+                    if let audioFilePath = note.audioFilePath, let audioURL = URL(string: audioFilePath) {
+                        do {
+                            let player = try AVAudioPlayer(contentsOf: audioURL)
+                            audioPlayer = player
+                        } catch {
+                            print("Error initializing audio player: \(error)")
+                        }
+                    } else {
+                        print("Audio file path: \(String(describing: note.audioFilePath))")
+                        print("Converted audio URL: \(String(describing: URL(string: note.audioFilePath ?? "")))")
+                    }
+                }
+                audioPlayer?.prepareToPlay() // Explicitly prepare the audio player
+                audioPlayer?.play()
             }
+            // Toggle playback state
+            isPlaying.toggle()
+        }) {
+            HStack {
+                Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                Text(isPlaying ? "Pause" : "Play")
+            }
+            .padding()
         }
+
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: Button(action: {
             showShareSheet = true

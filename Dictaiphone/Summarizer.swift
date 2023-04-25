@@ -49,6 +49,8 @@ class Summarizer: NSObject, ObservableObject, AVAudioRecorderDelegate, WhisperDe
       @Published
       var isSummarizing: Bool = false
 
+    @Published
+       var waveformAmplitudes: [CGFloat] = []
     
     private let logger: Logger
     private var isBusy: Bool = false
@@ -233,12 +235,28 @@ class Summarizer: NSObject, ObservableObject, AVAudioRecorderDelegate, WhisperDe
         // Reset real-time transcription at the start of a new recording.
         self.realTimeTranscription = ""
         
-        inputNode.installTap(onBus: 0, bufferSize: 8192, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+        inputNode.installTap(onBus: 0, bufferSize: 2048, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
             // Append recorded audio frames to the buffer.
             let recordedFrames = Array<Float>(UnsafeBufferPointer(buffer.audioBufferList.pointee.mBuffers))
             self.audioFrames.append(contentsOf: recordedFrames)
+            
+            // Calculate RMS amplitude levels for the waveform
+            let chunkSize = 160 // Define the chunk size for RMS calculation
+            var rmsAmplitudes: [CGFloat] = []
+            for i in stride(from: 0, to: recordedFrames.count, by: chunkSize) {
+                let chunk = recordedFrames[i ..< min(i + chunkSize, recordedFrames.count)]
+                let rms = sqrt(chunk.map { CGFloat($0) * CGFloat($0) }.reduce(0, +) / CGFloat(chunk.count))
+                rmsAmplitudes.append(rms)
+            }
+            
+            DispatchQueue.main.async {
+                self.waveformAmplitudes = rmsAmplitudes
+                // Print the count and the first few amplitude values
+                let count = self.waveformAmplitudes.count
+                let firstFewAmplitudes = self.waveformAmplitudes.prefix(10)
+            }
         }
-        
+
         audioEngine.prepare()
         do {
             try audioEngine.start()

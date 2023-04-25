@@ -3,6 +3,7 @@
     <entity name="Note" representedClassName="Note" syncable="YES" codeGenerationType="class">
         <attribute name="actionItems" optional="YES" attributeType="String"/>
         <attribute name="audioFilePath" optional="YES" attributeType="String"/>
+        <attribute name="audioURL" optional="YES" attributeType="String"/>
         <attribute name="dateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="subtitle" optional="YES" attributeType="String"/>
         <attribute name="summary" optional="YES" attributeType="String"/>

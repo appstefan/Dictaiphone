@@ -4,136 +4,129 @@
 //
 //  Created by Stefan Britton on 2023-04-20.
 //
-
 import SwiftUI
-//import EventKit
-
 
 struct CreateNoteView: View {
+    @ObservedObject var audioRecorder: AudioRecorder
+
     @Environment(\.dismiss)
     private var dismiss
-    
+    @Environment(\.colorScheme)
+    var colorScheme
+
     @Environment(\.managedObjectContext)
     private var viewContext
     
     @EnvironmentObject
     private var summarizer: Summarizer
-    
-        
-//        @State
-//        private var showShareSheet: Bool = false
-    
+
     @State
     private var showSaveAlert: Bool = false
     
-    
-    @State private var itemsToShare: [String] = []
-    
+
     var body: some View {
-        List {
-//            Button("Share Action Items") {
-//                           showShareSheet = true
-//                       }
-//                       .sheet(isPresented: $showShareSheet) {
-//                           ShareSheet(activityItems: summarizer.actionItems)
-//                       }
-            Section("") {
-                if summarizer.isRecording {
-                    Button("Stop") {
-                        summarizer.stopRecording()
-                    }
-                } else if !summarizer.hasRecording {
-                    Button("Start") {
-                        summarizer.startRecording()
-                    }
-                } else if summarizer.isTranscribing {
-                    VStack(alignment: .leading) {
-                        Text("Transcribing...")
-                        ProgressView(value: summarizer.transcribeProgress)
-                    }
-                } else if summarizer.isSummarizing {
-                    VStack(alignment: .leading) {
-                        Text("Summarizing...")
-                        ProgressView() // Indeterminate progress view (spinning)
-                    }
-                } else if summarizer.summary == nil {
-                    Button("") {
-                        clear()
-                    }
-                } else {
-                    Button("Clear") {
-                        clear()
-                    }
-                }
-            }
-            if let title = summarizer.title {
-                Section("Title") {
-                    Text(title)
-                }
-            }
-            if let subtitle = summarizer.subtitle {
-                Section("Subtitle") {
-                    Text(subtitle)
-                }
-            }
-            if let summary = summarizer.summary {
-                Section("Summary") {
-                    Text(summary)
-                }
-                Section("Action Items") {
-                    ForEach(summarizer.actionItems, id: \.self) { actionItem in
-                        Text(actionItem)
-                    }
-                }
-            }
-            Section("Transcript") {
-                Text(summarizer.text)
-            }
-        }
-//        .actionSheet(isPresented: $showShareSheet) {
-//            ActionSheet(
-//                title: Text("Share Action Items"),
-//                buttons: [
-//                    .default(Text("Share"), action: {
-//                        itemsToShare = summarizer.actionItems
-//                        showShareSheet = true
-//                    }),
-//                    .default(Text("Export to To-Do List"), action: {
-//                        exportToReminders()
-//                    }),
-//                    .cancel()
-//                ]
-//            )
-//        }
-//                .sheet(isPresented: $showShareSheet) {
-//                    ActivityView(activityItems: itemsToShare, applicationActivities: nil)
-//                }
+        let gradient = LinearGradient(
+            gradient: Gradient(colors: [
+                Color(red: 0.181, green: 0.192, blue: 0.187),
+                Color(red: 0.042, green: 0.042, blue: 0.042)
+            ]),
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
         
-        .navigationTitle(summarizer.title ?? "New Recording")
-        .interactiveDismissDisabled(hasSummary || summarizer.isRecording)
-        .toolbar {
-            if hasSummary {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Discard", role: .destructive) {
-                        clear()
-                        dismiss()
+        return ZStack {
+            // Use the gradient as the background of the ZStack
+            Rectangle()
+                .fill(gradient)
+                .edgesIgnoringSafeArea(.all)
+            VStack {
+                // Waveform view
+                
+                
+                if summarizer.isRecording {
+                    CustomWaveformView(amplitudes: summarizer.waveformAmplitudes)
+                        .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 100, alignment: .center)
+                    // Recording label and Summarize button while recording
+                    Text("Recording...")
+                        .font(.title2)
+                        .padding(.bottom, 10)
+                    
+                    Button(action: {
+                        summarizer.stopRecording()
+                        audioRecorder.stopRecording()
+                    }, label: {
+                        HStack {
+                            Image("mic") // Add the desired icon
+                            Text("Summarize")
+                        }
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                    })
+                } else {
+                    if summarizer.isTranscribing {
+                        VStack(alignment: .leading) {
+                            Text("Transcribing...")
+                            ProgressView(value: summarizer.transcribeProgress)
+                        }
+                    } else if summarizer.isSummarizing {
+                        VStack(alignment: .leading) {
+                            Text("Summarizing...")
+                            ProgressView() // Indeterminate progress view (spinning)
+                        }
+                    } else {
+                        // Display data after recording is stopped
+                        List {
+                            
+                            if let summary = summarizer.summary {
+                                Section("Summary") {
+                                    Text(summary)
+                                }
+                                Section("Action Items") {
+                                    ForEach(summarizer.actionItems, id: \.self) { actionItem in
+                                        Text(actionItem)
+                                    }
+                                }
+                            }
+                            Section("Transcript") {
+                                Text(summarizer.text)
+                            }
+                        }
                     }
                 }
             }
-            ToolbarItem(placement: .confirmationAction) {
-                if hasSummary {
-                    Button("Save") {
-                        saveAndDismiss()
+            .padding()
+            .onAppear {
+                // Start recording automatically when the view appears
+                summarizer.startRecording()
+                audioRecorder.startRecording()
+            }
+            // The rest of your body code here...
+            //.navigationTitle(summarizer.title ?? "New Recording")
+            .interactiveDismissDisabled(hasSummary || summarizer.isRecording)
+            .toolbar {
+                if let summary = summarizer.summary, !summary.isEmpty {
+                    ToolbarItem(placement: .principal) {
+                        Text(summarizer.title ?? "New Recording")
+                            .font(.headline)
                     }
-                } else {
-                    Button("Done") {
-                        dismiss()
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    if hasSummary {
+                        Button("Save") {
+                            audioRecorder.stopRecording()
+                            saveAndDismiss()
+                        }
+                    } else {
+                        Button("Done") {
+                            dismiss()
+                        }
                     }
                 }
             }
         }
     }
-    
     private var hasSummary: Bool {
         !(summarizer.summary?.isEmpty ?? true)
     }
@@ -143,6 +136,9 @@ struct CreateNoteView: View {
     }
     
     private func saveAndDismiss() {
+        print("Saving and dismissing...")
+            print("AudioRecorder's audioFileURL: \(audioRecorder.audioFileURL)")
+
         withAnimation {
             let system = Note(context: viewContext)
             system.dateCreated = .now
@@ -150,76 +146,19 @@ struct CreateNoteView: View {
             system.title = summarizer.title
             system.summary = summarizer.summary
             system.subtitle = summarizer.subtitle
-            system.actionItems = summarizer.actionItems.joined(separator: ",")
-
-            do {
-                try viewContext.save()
-                summarizer.clear()
-                dismiss()
-            } catch let nsError as NSError {
-                fatalError("\(nsError), \(nsError.userInfo)")
+            system.actionItems = summarizer.actionItems.joined(separator: "\n")
+            
+            // Set the audioFilePath property of the new note to the file path of the recorded audio
+            system.audioFilePath = audioRecorder.audioFilePath
+                print("Saving audioFilePath: \(String(describing: audioRecorder.audioFilePath))") // Check the printed output
+                    do {
+                        try viewContext.save()
+                        summarizer.clear()
+                        audioRecorder.audioFilePath = nil // Clear the audio file path
+                        dismiss()
+                    } catch let nsError as NSError {
+                        fatalError("\(nsError), \(nsError.userInfo)")
+                    }
+                }
             }
-        }
-    }
-//    private func exportToReminders() {
-//        let eventStore = EKEventStore()
-//        eventStore.requestAccess(to: .reminder) { (granted, error) in
-//            if granted {
-//                // Create a reminder for each action item
-//                for item in summarizer.actionItems {
-//                    let reminder = EKReminder(eventStore: eventStore)
-//                    reminder.title = item
-//                    reminder.calendar = eventStore.defaultCalendarForNewReminders()
-//
-//                    do {
-//                        // Save the reminder
-//                        try eventStore.save(reminder, commit: true)
-//                    } catch {
-//                        // Handle error when saving the reminder
-//                        print("Error saving reminder: \(error)")
-//                    }
-//                }
-//            } else {
-//                // Handle error when access is not granted
-//                print("Access to Reminders app not granted")
-//            }
-//        }
-//    }
-//
-//    struct ShareSheet: UIViewControllerRepresentable {
-//        typealias UIViewControllerType = UIActivityViewController
-//
-//        var activityItems: [String]
-//
-//        func makeUIViewController(context: Context) -> UIActivityViewController {
-//            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-//            return activityViewController
-//        }
-//
-//        func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
-//            // No need to update anything
-//        }
-//    }
-    struct CreateNoteView_Previews: PreviewProvider {
-        static var summarizer = Summarizer()
-        
-        static var previews: some View {
-            NavigationStack {
-                CreateNoteView()
-                    .environmentObject(summarizer)
-            }
-        }
-    }
-    struct ActivityView: UIViewControllerRepresentable {
-        let activityItems: [Any]
-        let applicationActivities: [UIActivity]?
-
-        func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityView>) -> UIActivityViewController {
-            let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
-            return controller
-        }
-
-        func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityView>) {
-        }
-    }
 }

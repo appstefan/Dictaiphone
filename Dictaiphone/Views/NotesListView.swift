@@ -10,7 +10,8 @@ import SwiftUI
 struct NotesListView: View {
     @Environment(\.managedObjectContext)
     var viewContext
-    
+    @Environment(\.colorScheme)
+    var colorScheme
     @FetchRequest(
         sortDescriptors: [
             NSSortDescriptor(keyPath: \Note.dateCreated, ascending: false)
@@ -24,6 +25,9 @@ struct NotesListView: View {
     @State
     var selectedNote: Note.ID?
     
+    @StateObject var audioRecorder = AudioRecorder()
+
+    
     var body: some View {
         NavigationSplitView(
             sidebar: {
@@ -36,16 +40,27 @@ struct NotesListView: View {
                         }
                 }
                 .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading){
+                        Text("Dictaiphone")
+                            .font(.title)
+                            
+                    }
                     ToolbarItem {
+
                         Button(action: { showCreateNote = true }) {
-                            Label("Add", systemImage: "plus")
+                            if colorScheme == .dark {
+                                Label("Add", image: "+")
+                                        } else {
+                                            Label("Add", image: "+light")
+                                        }
+                            
                         }
                     }
                 }
-                .navigationTitle("Dictaitions")
                 .sheet(isPresented: $showCreateNote) {
                     NavigationStack {
-                        CreateNoteView()
+                        CreateNoteView(audioRecorder: audioRecorder)
+                        
                     }
                 }
             },

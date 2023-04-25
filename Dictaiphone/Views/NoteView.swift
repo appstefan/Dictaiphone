@@ -11,17 +11,30 @@ struct NoteView: View {
     let note: Note
     
     var body: some View {
-        VStack(alignment: .listRowSeparatorLeading, spacing: 8) {
-            VStack(alignment: .listRowSeparatorLeading, spacing: 4) {
+        
+        VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(note.title ?? "")
-                    .font(.headline)
+                    .font(.custom("Fonts/Inter-Bold.otf", size: 20))
                     .fixedSize(horizontal: false, vertical: true)
                 Text(note.dateCreated ?? .now, format: .dateTime)
-                    .font(.caption)
+                    .font(.custom("Inter-Medium", size: 15))
                     .foregroundColor(.secondary)
             }
             Text(note.subtitle ?? "")
                 .foregroundColor(.secondary)
+            
+            // Calculate the number of action items
+            let actionItemCount = (note.actionItems ?? "")
+                .split(separator: "\n")
+                .count
+            
+            // Display the count of action items as a callout
+            if actionItemCount > 0 {
+                Text("\(actionItemCount) Action Item\(actionItemCount > 1 ? "s" : "")")
+                    .font(.custom("Inter-Bold", size: 15))
+                    .foregroundColor(.accentColor)
+            }
         }
     }
 }
